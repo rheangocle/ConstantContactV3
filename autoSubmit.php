@@ -9,7 +9,7 @@ error_reporting(E_ALL);
 $accessTokenFromDb = getAccessTokenFromDb(REFRESH_TOKEN);
 
 // Can be found doing a get request on developer.constantcontact.com
-$dailyNewsContactListId = 'd7377860-d7c4-11ed-a578-fa163eb65cb7';
+$dailyNewsContactListId;
 
 saveEmailToDb($email_text);
 

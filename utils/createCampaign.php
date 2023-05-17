@@ -2,15 +2,12 @@
 
 function createCampaign($auth, $email_text) {
 
-    // Today's date
-    $dateString = date('M j, Y');
-
     // Set the API endpoint
     $url = 'https://api.cc.email/v3/emails';
 
     // Set the request body as an array
     $requestBody = array(
-        'name' => random_int(1,100000).'Daily News: '.$dateString, // name has to be unique
+        'name' => random_int(1,100000).'CAMPAIGN_NAME', // name has to be unique
         'email_campaign_activities' => array(
             array(
                 'format_type' => 5,
