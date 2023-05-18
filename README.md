@@ -1,4 +1,4 @@
-# Constant Contact V3 PHP Example
+#  📧 Constant Contact V3 PHP Example
 
 This repository provides an example of implementing Constant Contact version 3 with functionality for OAuth and email creation/scheduling. It serves as a reference for updating existing code to work with Constant Contact API version 3. The example focuses on OAuth 2 Authorization Code Flow.
 
@@ -16,12 +16,14 @@ Here are the steps involved in OAuth 2 and authorization:
 5. Keep in mind that access tokens and short-lived refresh tokens expire after 24 hours.
 6. Follow the Constant Contact examples or use Postman to obtain an authorization code.
 
+<br>
+
 ---
 ## Refreshing tokens
 
 There is a crucial difference in this step compared to the Constant Contact documentation. Please read the explanation below after reviewing the following code block:
 
-```
+```php
 // Define the base URL
 $url = 'https://authz.constantcontact.com/oauth2/default/v1/token';
 
@@ -54,13 +56,14 @@ $accessToken = $responseObject->access_token;
 
 **Important Note**: Constant Contact docs showed the step for obtaining access token and refreshing tokens with the request parameters `refresh_token` and `grant_type` in the request URL. However in practice, they need to be in the POST fields.
 
+<br>
 
 ---
 ## Creating an email campaign
 
 The name of the email campaign must be unique. In this example, a random number is concatenated with random_int() to generate the campaign name. Review the following code block:
 
-```
+```php
   // Set API endpoint
   $url = 'https://api.cc.email/v3/emails';
 
@@ -102,7 +105,7 @@ After completing the previous step, the email will be saved as a draft in Consta
 
 To schedule the campaign, you need the campaign activity ID, which can be obtained from the response of the `createCampaign()` function. Here's an example of obtaining the campaign activity ID:
 
-```
+```php
 // createCampaign returns a json, use json_decode to convert to object
 $responseObject = json_decode(createCampaign($accessTokenFromDb, $email_text));
 
@@ -112,7 +115,7 @@ $campaignActivityId = $responseObject->campaign_activities[0]->campaign_activity
 
 Once you have the campaign activity ID, you can proceed with scheduling the campaign:
 
-```
+```php
     // API Endpoint
     $url = "https://api.cc.email/v3/emails/activities/$campaignActivityId/schedules";
 
@@ -132,6 +135,7 @@ Once you have the campaign activity ID, you can proceed with scheduling the camp
 ```
 Feel free to customize the scheduled_date with the desired time to schedule the email campaign.
 
+<br>
 
 ---
 ## Contact
