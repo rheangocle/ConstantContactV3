@@ -1,19 +1,9 @@
 <?php
-// Display any errors on page
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
-// Add neccessary files
-
-$accessTokenFromDb = getAccessTokenFromDb(REFRESH_TOKEN);
+// Add the required files
 
 // Can be found doing a get request on developer.constantcontact.com
-$dailyNewsContactListId;
-
-saveEmailToDb($email_text);
-
-
+$contactListId = "xxxxxxxxxxxxxxxxxxxx";
 
 // Creating campaign & converting json string to object
 $responseObject = json_decode(createCampaign($accessTokenFromDb, $email_text));
@@ -24,16 +14,19 @@ $campaignActivityId = $responseObject->campaign_activities[0]->campaign_activity
 // Checking for campaign activity ID and scheduling campaign
 if (!empty($campaignActivityId)) {
 
-    $response = addContactList($accessTokenFromDb, $dailyNewsContactListId, $campaignActivityId);
+    // Add contact list to campaign 
+    $response = addContactList($accessTokenFromDb, $contactListId, $campaignActivityId);
 
     if ($response)
     {
         $scheduledDate = new DateTime();
-        $scheduledDate->setTime(6, 0,0); // 6 AM schedule time
+
+        $scheduledDate->setTime(7, 0,0); // 7 AM schedule time
         // Might have to modify time, CC was 4 hours ahead of EST. 
-        $scheduledDate->modify('+4 hours');// Add 4 hours to date you want to set, CC API time is 4 hrs ahead.
-        $todaySixAm = $scheduledDate->format('Y-m-d\TH:i:s\Z');
-        scheduleEmailCampaign($accessTokenFromDb, $todaySixAm, $campaignActivityId);
+        $scheduledTime = $scheduledDate->format('Y-m-d\TH:i:s\Z');
+
+        // Scheduling campaign
+        scheduleEmailCampaign($accessTokenFromDb, $scheduledTime, $campaignActivityId);
     } else {
         echo "Unable to schedule campaign";
     }

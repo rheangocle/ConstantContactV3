@@ -53,33 +53,17 @@ function refreshToken($refreshToken, $clientId, $clientSecret)
     }
 }
 
+// Convert json response to object
 $responseObject = json_decode(refreshToken(REFRESH_TOKEN, CLIENT_ID, CLIENT_SECRET));
-$accessToken = $responseObject->access_token;
-echo $accessToken;
 
+// Get the access token from the response
+$accessToken = $responseObject->access_token;
+
+// Ensure access token is not null
 if ($accessToken == null) {
     echo "Could not retrieve access token, check refresh token method";
 } else {
     echo "Refresh token was used to successfully update access token!";
-
-    $db = 'constant_contact_v3';
-
-    try {
-        // Put access token and refresh token in db
-        $dbConnector = new DatabaseConnector($db);
-
-        // Delete any previous access tokens with the same refresh token
-        $delete_query = "DELETE FROM access_tokens WHERE refresh_token = :refresh_token";
-        $delete_prepared = $dbConnector->prepareQuery($delete_query);
-        $dbConnector->executeQuery($delete_prepared, array(':refresh_token' => REFRESH_TOKEN));
-
-        // Insert the new access token
-        $insert_query = "INSERT INTO access_tokens (refresh_token, access_token) VALUES (:refresh_token, :access_token)";
-        $insert_prepared = $dbConnector->prepareQuery($insert_query);
-        $dbConnector->executeQuery($insert_prepared, array(':refresh_token' => REFRESH_TOKEN, ':access_token' => $accessToken));
-    } catch (PDOException $e) {
-        echo "Database error: " . $e->getMessage();
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
-    }
 }
+
+ // Save the new access token to a file or db
